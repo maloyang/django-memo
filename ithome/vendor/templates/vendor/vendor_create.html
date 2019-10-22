@@ -1,0 +1,11 @@
+# 為了展示給大家看，這裡的code並不完整
+{% extends "base.html" %}
+{% block title %} My store {% endblock %}
+{% block content%}
+<h2> Vendor Create</h2>
+<form method='POST'>
+  {% csrf_token %} 
+  {{ form.as_p }}
+<input type="submit" value="save" />
+</form>
+{% endblock %}
