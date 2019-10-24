@@ -446,4 +446,70 @@ class VendorForm(forms.ModelForm):
 ## Day19 : Django Form
 20191022, [link](https://ithelp.ithome.com.tw/articles/10203227)
 
+- 在vendor/forms.py加入
+```
+# 創建一個 Raw Form
+class RawVendorForm(forms.Form):
+    vendor_name = forms.CharField()
+    store_name = forms.CharField()
+    phone_number = forms.CharField()
+```
+
+- 在vendor/views.py中加入
+```
+from .forms import RawVendorForm # 新增 RawVendorForm
+
+# 新增 --> 取代本來的vendor_create_view
+def vendor_create_view(request):
+    form = RawVendorForm(request.POST or None)
+    if form.is_valid():
+        print(form.cleaned_data)
+        form = VendorForm()
+    context = {
+        'form' : form
+    }
+    return render(request, "vendors/vendor_create.html", context)
+```
+
+## Day20 : 動態網址 - path 應用
+20191023, [link](https://ithelp.ithome.com.tw/articles/10203370)
+使用path顯示單一個店家的資訊
+
+- vendor/urls.py中加入
+```
+urlpatterns = [
+    path('<int:id>/', views.singleVendor, name='vendor'),
+    #...略
+]
+```
+- vendor/views.py中加入
+```
+def singleVendor(request, id):
+    vendor_list = Vendor.objects.get(id=id)
+    context = {
+        'vendor_list': vendor_list
+    }
+    return render(request, 'vendors/vendor_detail.html', context)
+```
+
+- 增加vendor/templates/vendor/vendor_detial.html
+    - 這邊vendor_list直接.store_name表示：`Vendor.objects.get(id=id)`回傳的不是一個list, 而是一個dict
+```
+{% extends "base.html" %}
+{% block title %} My store {% endblock %}
+{% block content%}
+<h1> 店家 : {{vendor_list.vendor_name}} </h1>
+<ul>
+  <li>店名 : {{ vendor_list.store_name}}</li>
+  <li>電話 : {{ vendor_list.phone_number}}</li>
+  <li>地址 : {{ vendor_list.address}}</li>
+</ul>
+{% endblock %}
+```
+
+- 在`http://127.0.0.1:8000/vendor/1/`可以看到結果
+
+## Day 21 : 網頁例外
+20191023, [link](https://ithelp.ithome.com.tw/articles/10203801)
+
 

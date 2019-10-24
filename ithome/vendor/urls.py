@@ -24,6 +24,7 @@ urlpatterns = [
 '''
 # 修改後
 urlpatterns = [
+    path('<int:id>/', views.singleVendor, name='vendor'),
     # 後方的 name 可以先忽略，目前不會用到
     #path('', views.vendor_index, name="vendor_index"),
     path('', views.showtemplate, name="vendor_index"),

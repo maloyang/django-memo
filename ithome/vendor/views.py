@@ -32,3 +32,9 @@ def vendor_create_view(request):
     }
     return render(request, "vendor/vendor_create.html", context)
 
+def singleVendor(request, id):
+    vendor_list = Vendor.objects.get(id=id)
+    context = {
+        'vendor_list': vendor_list
+    }
+    return render(request, 'vendor/vendor_detail.html', context)
