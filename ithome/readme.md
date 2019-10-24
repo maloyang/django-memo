@@ -512,4 +512,42 @@ def singleVendor(request, id):
 ## Day 21 : 網頁例外
 20191023, [link](https://ithelp.ithome.com.tw/articles/10203801)
 
+- 以 vendor/n 這個url為例，如果輸入的n=6時沒有東西，會出錯，因此需要提供一個處理出錯的頁面 (404錯誤)
+    - 目前的出錯畫面
+    - ![img](img/day21_404.png)
+
+- 在 vendor/views.py 裡面加入try...except...
+    ```
+    def singleVendor(request, id):
+        try:
+            vendor_list = Vendor.objects.get(id=id)
+        except Vendor.DoesNotExist:
+            raise Http404
+
+        context = {
+            'vendor_list': vendor_list
+        }
+        return render(request, 'vendor/vendor_detail.html', context)
+    ```
+- 產生404的頁面就會如下(因為Django是Debug模式，所以畫面不像一般看到的那樣)：![img](img/day21_404_2.png)
+
+- 要看正常網頁，我改 ithome/settings.py的這一行 `DEBUG = False`
+    - 但是我卻會無法執行 `python manager.py runserver`
+    ```
+    (venv) C:\Users\Malo\Documents\py\Django\django-memo\ithome>python manage.py runserver
+    CommandError: You must set settings.ALLOWED_HOSTS if DEBUG is False.    
+    ```
+
+- 文章中提到要再改 `ALLOWED_HOSTS = ['*']` ，果然就ok了
+![img](img/day21_404_3.png)
+
+- 另外，也可以用這樣寫來處理，更加簡潔
+```
+vendor_list = get_object_or_404(Vendor, id=id)
+```
+
+## Day22 : Django urls name
+20191024, [link](https://ithelp.ithome.com.tw/articles/10204069)
+
+
 

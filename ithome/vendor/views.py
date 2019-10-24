@@ -10,6 +10,8 @@ def showtemplate(request):
 from django.shortcuts import render
 from .models import Vendor
 from .forms import VendorForm # 要記得 import 相對應的 Model Form 唷!
+from django.http import Http404 # day21, 額外 import Http404
+from django.shortcuts import get_object_or_404 # day21, 新增
 
 # Create your views here.
 def showtemplate(request):
@@ -33,8 +35,16 @@ def vendor_create_view(request):
     return render(request, "vendor/vendor_create.html", context)
 
 def singleVendor(request, id):
-    vendor_list = Vendor.objects.get(id=id)
+    vendor_list = get_object_or_404(Vendor, id=id)
+    '''
+    try:
+        vendor_list = Vendor.objects.get(id=id)
+    except Vendor.DoesNotExist:
+        raise Http404
+    '''
+
     context = {
         'vendor_list': vendor_list
     }
     return render(request, 'vendor/vendor_detail.html', context)
+
