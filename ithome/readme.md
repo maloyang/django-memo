@@ -549,5 +549,37 @@ vendor_list = get_object_or_404(Vendor, id=id)
 ## Day22 : Django urls name
 20191024, [link](https://ithelp.ithome.com.tw/articles/10204069)
 
+- 改 `vendor/urls.py`:
+```
+path('<int:id>/', views.singleVendor, name='vendor_id'),  #-->把本來的`name='vendor'改成這個
+```
 
+- 在`vendor/models.py`中修改`Vendor`這一個class
+```
+from django.urls import reverse # 新增
 
+#...略
+
+class Vendor(models.Model):
+    vendor_name = models.CharField(max_length=20) #vendor name
+    store_name = models.CharField(max_length=10) #vendor店名
+    phone_number = models.CharField(max_length=20)
+    address = models.CharField(max_length=100)
+
+    # 覆寫 __str__
+    def __str__(self):
+        return self.vendor_name
+
+    # 將 get_absolute_url 修改如下
+        def get_absolute_url(self):
+            return reverse("vendor_id", kwargs={"id": self.id})   
+```
+
+- 其實這樣帶來的好處…還是搞不懂，因為本來是要自動列出link清單的連結，後來變成在講維護link更方便的方法 >..< 這....
+
+## Day23 : Django 命名空間
+20191025, [link](https://ithelp.ithome.com.tw/articles/10204346)
+
+- 為了避免url name的重覆，因此使用Django的這一個機制
+
+- but...我有改，沒改其實結果都一樣，看不出來發生了什麼事

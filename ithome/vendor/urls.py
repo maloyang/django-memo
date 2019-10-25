@@ -17,16 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
-'''
-urlpatterns = [
-    path('', views.showtemplate),
-]
-'''
+app_name = 'vendors' # 新增
+
 # 修改後
 urlpatterns = [
-    path('<int:id>/', views.singleVendor, name='vendor'),
-    # 後方的 name 可以先忽略，目前不會用到
-    #path('', views.vendor_index, name="vendor_index"),
+    path('<int:id>/', views.singleVendor, name='vendor_id'),
+
     path('', views.showtemplate, name="vendor_index"),
     path('detail', views.showdetail),
     path('create', views.vendor_create_view), # 新增
