@@ -137,3 +137,47 @@
   - 也可以用 `python manage.py runserver 8080` 指定port
   - 或是用 `python manage.py runserver 0:8000` 讓web server可以對任意IP做服務(這邊 0 意指 0.0.0.0)
 
+- 建立water資訊的APP: `python manage.py startapp water_signal`
+  - 以此APP來提供所有資料的API
+  - 建立新App後，要先在 ./water/settings.py 中登記這一個App，修改如下:
+  ```
+  INSTALLED_APPS = [
+      ...
+      'django.contrib.staticfiles',
+      'water_signal',
+  ]  
+  ```
+  - 接著要建立MTV中的View -> 也就是MVC中的controller這部分，做為商業邏輯的功能 (App中的views.py檔案)
+  - 先建立一個 Hello IoT!的API，修改views.py程式如下
+  ```
+  from django.shortcuts import render
+  from django.http import HttpResponse
+
+  # Create your views here.
+  def web_hello_iot(request):
+      return HttpResponse('Hello IoT')  
+  ```
+  - URL mapping的規劃，假設 ~/hello 是我們要規劃的網址，修改./water/urls.py 如下:
+  ```
+  from django.contrib import admin
+  from django.urls import path, include, re_path
+  from water_signal import views
+
+  urlpatterns = [
+      path('admin/', admin.site.urls),
+      path('water_signal/', include('water_signal.urls', namespace='water_signal')),
+  ]
+  ```
+  - 其中第一行 path('admin/'.... --> 是指 ~/admin/ 網址要進到admin管理頁面去
+  - 新加入的 path('hello/'.... --> 是指 ~/hello/ 網址要用 water_iot 模組中的urls.py去進一步解析
+  - 所以這邊我們在新增一個urls.py在water_iot的App資料夾下，內容如下
+  ```
+  from django.urls import path
+  from water_signal import views
+
+  app_name = 'water_signal'
+
+  urlpatterns = [
+      path('',  views.web_hello_iot, name='water_signal'), #讓views.py中的web_hello_iot函式處理
+  ]  
+  ```
