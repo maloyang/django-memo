@@ -58,10 +58,10 @@
         'default':{
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'water',
-            'USER': 'user',
-            'PASSWORD': 'ixdezuser',
-            'HOST': 'dosg.maria.ewxew.com',
-            'PORT': '43306',
+            'USER': 'username',
+            'PASSWORD': 'this-is-my-pwd',
+            'HOST': 'myserver.com.tw',
+            'PORT': '3306',
         }
     }
     ''' # default DB setting
@@ -93,7 +93,7 @@
     - 改安裝mysqlclient: `pip install mysqlclient`
 
 - 資料庫遷移: 在django中本身有自己預設的很多資料表(對應到資料模型)，因此前置作業弄好後，接著就是要來做`資料庫的遷移`(django都是這樣稱呼這個動作的)
-- 下指令
+- 下指令 (p3-14)
   - `python manage.py makemigrations` 產生需要的SQL程式
   - `python manage.py migrate` 利用makemigrations產生的SQL程式來產生資料表
   - 過程如下:
@@ -131,4 +131,9 @@
   ```
   - 資料庫如下圖，除了data_table以外，都是django建立的
   - ![img](img/waterdb1.png)
-  - 
+
+- 這時可以啟動web server，確認我們初步建置沒有問題， `python manage.py runserver` (p3-15)
+  - 用: http://localhost:8000 就可以看到網頁
+  - 也可以用 `python manage.py runserver 8080` 指定port
+  - 或是用 `python manage.py runserver 0:8000` 讓web server可以對任意IP做服務(這邊 0 意指 0.0.0.0)
+
