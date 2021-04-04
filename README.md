@@ -45,6 +45,7 @@
     - wsgi.py : 伺服器閘道介面 (web server gateway interface)，
   - 編輯設定擋
     - 改host, db setting, lang., time_zone
+    - 其中，'NAME'指的是資料庫的名稱
     ```
     ...
 
@@ -56,7 +57,7 @@
     DATABASES = {
         'default':{
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'blog',
+            'NAME': 'water',
             'USER': 'user',
             'PASSWORD': 'ixdezuser',
             'HOST': 'dosg.maria.ewxew.com',
@@ -82,3 +83,52 @@
 
     ```
     
+  - 當然這時候就需要安裝mariaDB (or mySQL)的python套件，我之前使用pymysql，但網路上有人建議在django中使用mysqlclient [ref](https://riptutorial.com/django/example/17418/mysql---mariadb)
+    - 我先安裝pymysql: `pip install pymysql`
+    - but 後面做資料庫遷移時就出錯了....，有提示訊息:
+    ```
+    django.core.exceptions.ImproperlyConfigured: Error loading MySQLdb module.
+    Did you install mysqlclient?
+    ```
+    - 改安裝mysqlclient: `pip install mysqlclient`
+
+- 資料庫遷移: 在django中本身有自己預設的很多資料表(對應到資料模型)，因此前置作業弄好後，接著就是要來做`資料庫的遷移`(django都是這樣稱呼這個動作的)
+- 下指令
+  - `python manage.py makemigrations` 產生需要的SQL程式
+  - `python manage.py migrate` 利用makemigrations產生的SQL程式來產生資料表
+  - 過程如下:
+  ```
+  (venv) D:\python\django\water_prj\water>python manage.py makemigrations
+  No changes detected
+
+  (venv) D:\python\django\water_prj\water>python manage.py migrate
+  System check identified some issues:
+
+  WARNINGS:
+  ?: (mysql.W002) MariaDB Strict Mode is not set for database connection 'default'
+          HINT: MariaDB's Strict Mode fixes many data integrity problems in MariaDB, such as data truncation upon insertion, by escalating warnings into errors. It is strongly recommended you activate it. See: https://docs.djangoproject.com/en/3.1/ref/databases/#mysql-sql-mode
+  Operations to perform:
+    Apply all migrations: admin, auth, contenttypes, sessions
+  Running migrations:
+    Applying contenttypes.0001_initial... OK
+    Applying auth.0001_initial... OK
+    Applying admin.0001_initial... OK
+    Applying admin.0002_logentry_remove_auto_add... OK
+    Applying admin.0003_logentry_add_action_flag_choices... OK
+    Applying contenttypes.0002_remove_content_type_name... OK
+    Applying auth.0002_alter_permission_name_max_length... OK
+    Applying auth.0003_alter_user_email_max_length... OK
+    Applying auth.0004_alter_user_username_opts... OK
+    Applying auth.0005_alter_user_last_login_null... OK
+    Applying auth.0006_require_contenttypes_0002... OK
+    Applying auth.0007_alter_validators_add_error_messages... OK
+    Applying auth.0008_alter_user_username_max_length... OK
+    Applying auth.0009_alter_user_last_name_max_length... OK
+    Applying auth.0010_alter_group_name_max_length... OK
+    Applying auth.0011_update_proxy_permissions... OK
+    Applying auth.0012_alter_user_first_name_max_length... OK
+    Applying sessions.0001_initial... OK
+  ```
+  - 資料庫如下圖，除了data_table以外，都是django建立的
+  - ![img](img/waterdb1.png)
+  - 
