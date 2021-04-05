@@ -254,4 +254,6 @@ urlpatterns = [
 
 - 執行程式 `python manage.py runserver`，就可以看到我們新增的網頁 `http://localhost:8000/water_signal/hello2`
 - 可以得知 HttpResponse()只是原原本本的把我們的字串回傳 --> 那為何還要他呢?
+- 我們把 HttpResponse拿掉，只把 html 變數內容回傳，就變成 error 產生了，django無法處理GET回應，所以這應該是Django中處理http回應需要有的function包裝(如對GET, POST的標籤註記)，不使用HttpResponse()函數會讓Django不知道如何工作
+
 
