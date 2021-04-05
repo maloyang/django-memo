@@ -258,7 +258,7 @@ urlpatterns = [
 
 ----
 
-## 管理者介面
+## 管理者介面 (p8-9)
 
 - 前面實做過程中，會注意到 `water/urls.py`中的這一個path `path('admin/', admin.site.urls),`，這是Django內建的管理者功能 --> 用Django的價值就在這邊體現!
 - 首先， `python manage.py createsuperuser`
