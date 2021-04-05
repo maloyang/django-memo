@@ -215,3 +215,43 @@ def web_hello2(request):
 - 執行程式 `python manage.py runserver`，就可以看到我們新增的網頁 `http://localhost:8000/water_signal/hello2`
 - 由此可知，`water/urls.py`, `water_signal/urls.py` 這兩個的path設計是互相疊加的效果
 
+----
+
+- 在進一步測試，加入hello3的path，這一次我們要測試的試HttpResponse()這一個函式
+- 在`water_signal/views.py`中加入
+
+```
+def web_hello3(request):
+    html = '''
+    <!doctype html>
+    <html>
+    <head>
+    <title>水文IoT</title>
+    <meta charset='utf-8'>
+    </head>
+
+    <body>
+    <p>這是水文IoT的網頁</p>
+    </body>
+    </html>
+    '''
+    return HttpResponse(html)
+```
+- 並修改 `water_signal/urls.py`如下
+
+```
+from django.urls import path
+from water_signal import views
+
+app_name = 'water_signal'
+
+urlpatterns = [
+    path('',  views.web_hello_iot, name='water_signal'), #讓views.py中的web_hello_iot函式處理
+    path('hello2',  views.web_hello2),
+    path('hello3',  views.web_hello3),
+]
+```
+
+- 執行程式 `python manage.py runserver`，就可以看到我們新增的網頁 `http://localhost:8000/water_signal/hello2`
+- 可以得知 HttpResponse()只是原原本本的把我們的字串回傳 --> 那為何還要他呢?
+
