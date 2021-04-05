@@ -256,4 +256,20 @@ urlpatterns = [
 - 可以得知 HttpResponse()只是原原本本的把我們的字串回傳 --> 那為何還要他呢?
 - 我們把 HttpResponse拿掉，只把 html 變數內容回傳，就變成 error 產生了，django無法處理GET回應，所以這應該是Django中處理http回應需要有的function包裝(如對GET, POST的標籤註記)，不使用HttpResponse()函數會讓Django不知道如何工作
 
+----
+
+## 管理者介面
+
+- 前面實做過程中，會注意到 `water/urls.py`中的這一個path `path('admin/', admin.site.urls),`，這是Django內建的管理者功能 --> 用Django的價值就在這邊體現!
+- 首先， `python manage.py createsuperuser`
+- 這邊我們先以admin, wb@12345678建立
+```
+(venv) D:\python\django\water_prj\water>python manage.py createsuperuser
+使用者名稱 (leave blank to use 'malo'): wbadmin
+電子信箱:
+Password:
+Password (again):
+Superuser created successfully.
+```
+- 做到這邊就可以由 `http://localhost:8000/admin/` 連結進入管理頁面了
 
