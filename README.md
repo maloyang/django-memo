@@ -273,3 +273,53 @@ Superuser created successfully.
 ```
 - 做到這邊就可以由 `http://localhost:8000/admin/` 連結進入管理頁面了
 
+----
+## 加入資料庫的連結
+
+- 要在管理者介面中可以管理我們的資料，這時就要建立model，修改`water_signal/models.py`
+```
+from django.db import models
+
+# Create your models here.
+class Water_data(models.Model):
+    data_time = models.DateField()
+    water_level1 = models.FloatField()
+    water_level2 = models.FloatField()
+
+    def __str__(self):
+        return '[%s] %s, %s' %(self.data_time, self.water_level1, self.water_level2)
+```
+
+- 再執行 `python manage.py makemigrations`，會產生相對應需要的SQL指令於`water_signal/migrations/0001_inital.py`
+```
+(venv) D:\python\django\water_prj\water>python manage.py makemigrations
+Migrations for 'water_signal':
+  water_signal\migrations\0001_initial.py
+    - Create model Water_data
+```
+- 執行migrate的指令
+```
+(venv) D:\python\django\water_prj\water>python manage.py migrate
+System check identified some issues:
+
+WARNINGS:
+?: (mysql.W002) MariaDB Strict Mode is not set for database connection 'default'
+        HINT: MariaDB's Strict Mode fixes many data integrity problems in MariaDB, such as data truncation upon insertion, by escalating warnings into errors. It is strongly recommended you activate it. See: https://docs.djangoproject.com/en/3.1/ref/databases/#mysql-sql-mode
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions, water_signal
+Running migrations:
+  Applying water_signal.0001_initial... OK
+```
+
+- 至此，執行`python manage.py runserver`，就可以再開始使用admin去管理資料了?! --> no~no~ 要可以在管理者介面看到資料，還要登記再 water_signal/admin.py 中才行! 如下:
+```
+from django.contrib import admin
+from water_signal.models import Water_data
+
+# Register your models here.
+
+admin.site.register(Water_data)
+```
+
+- 結果，我們就可以管理 `water_signal_water_data`這一個table了，但我們其實是想要處理已經存在了data_table，要怎麼辦呢?
+
