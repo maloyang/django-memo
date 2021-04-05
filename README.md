@@ -181,3 +181,37 @@
       path('',  views.web_hello_iot, name='water_signal'), #讓views.py中的web_hello_iot函式處理
   ]  
   ```
+  - 以上結束後，用 `http://localhost:8000/water_signal/` 就可以看到我們剛剛完成的網頁 `Hello IoT`
+
+----
+
+- 進一步了解 `water/urls.py`, `water_signal/urls.py` 各自的功能區分，再做個實驗，我們在 `water/signal/urls.py`中加入新的path
+
+```
+from django.urls import path
+from water_signal import views
+
+app_name = 'water_signal'
+
+urlpatterns = [
+    path('',  views.web_hello_iot, name='water_signal'), #讓views.py中的web_hello_iot函式處理
+    path('hello2',  views.web_hello2),
+]
+```
+
+- 然後在 water_signal/views.py 加入新的function (web_hello2)，如下:
+```
+from django.shortcuts import render
+from django.http import HttpResponse
+
+# Create your views here.
+def web_hello_iot(request):
+    return HttpResponse('Hello IoT')
+
+def web_hello2(request):
+    return HttpResponse('Hello2')
+```
+
+- 執行程式 `python manage.py runserver`，就可以看到我們新增的網頁 `http://localhost:8000/water_signal/hello2`
+- 由此可知，`water/urls.py`, `water_signal/urls.py` 這兩個的path設計是互相疊加的效果
+
