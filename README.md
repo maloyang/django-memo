@@ -364,3 +364,66 @@ def data_last(request):
 
 - 這樣就可以在網址 `http://localhost:8000/water_signal/data/last` 下取得json資料
 
+----
+
+## 接著我們要從資料庫中取資料，以web API回應JSON格式
+
+[ref](https://blog.csdn.net/Gscsd_T/article/details/81913804)
+
+- `Water_data.objects.all()` 我們可以取得所有資料 (對應的DB table為: `water_signal_water_data`
+- 當我們要使用select來取部分資料時: `data = Water_data.objects.filter(data_time__gte=tm_start, data_time__lt=tm_end)`
+  - __gte : 大於等於
+  - __lte : 小於等於
+  - __endswith : 以...結尾
+- 要排序時，用 order_by :
+  - ASC:  Water_data.objects.filter(data_time__gte=tm_start, data_time__lt=tm_end).order_by('data_time')
+  - DESC: Water_data.objects.filter(data_time__gte=tm_start, data_time__lt=tm_end).order_by('-data_time')
+
+- 所以我們可以用以下的function取得某時間區間的資料 (加在 water_signal/views.py 中)
+
+```
+def data_t1t2_4chart(request):
+    if request.method == 'GET':
+        tm_start = request.GET.get('tm_start')
+        tm_end = request.GET.get('tm_end') # 用這個寫法! 和flask會比較類似
+        if not tm_start:
+            dt_now = datetime.datetime.now()
+            tm_end = dt_now.strftime("%Y-%m-%d 00:00:00")
+            tm_start = (dt_now - datetime.timedelta(days=7)).strftime("%Y-%m-%d 00:00:00")
+        else:
+            if not tm_end:
+                tm_end = tm_start
+                dt2 = datetime.datetime.strptime(tm_end,"%Y-%m-%d %H:%M:%S")
+                tm_start = (dt2 - datetime.timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+
+        print('data time: %s ~ %s' %(tm_start, tm_end))
+
+        # get data from DB
+        data = Water_data.objects.filter(data_time__gte=tm_start, data_time__lt=tm_end)
+
+        dtime_list = []
+        water_level_1_list = []
+        water_level_2_list = []
+        for item in data.values():
+            dtime = item['data_time']
+            str_dtime = dtime.strftime("%Y-%m-%d %H:%M:%S")
+            water_level1 = item['water_level1']
+            water_level2 = item['water_level2']
+            dtime_list.append(str_dtime)
+            water_level_1_list.append(water_level1)
+            water_level_2_list.append(water_level2)
+            print(str_dtime, water_level1, water_level2)
+
+        data_dict = {'water_level_1':water_level_1_list, 'water_level_2':water_level_2_list
+            , 'time':dtime_list}
+
+        result = {'result':'OK', 'data':data_dict}
+        return JsonResponse(result)
+
+    elif request.method == 'POST':
+        pass
+```
+
+- 當然，處理資料的function完成了，下一步就是要在`water_signal/urls.py`中登記，加入:
+  - `path('data/t1t2/4chart',  views.data_t1t2_4chart),`
+
