@@ -322,4 +322,45 @@ admin.site.register(Water_data)
 ```
 
 - 結果，我們就可以管理 `water_signal_water_data`這一個table了，但我們其實是想要處理已經存在了data_table，要怎麼辦呢?
+- 這個根據有經驗人士表示可以試試看`fake initial`，這個寫到這邊先停住，我們先完成其他功能
+- TODO: fake initial
+
+----
+
+## Web API 回應JSON資料
+
+### 關鍵字 `JsonResponse`
+
+- 我們先自己製造資料，先不取資料庫的資料，簡化需求，只完成JSON的回應功能
+- 先在 `water_signal/urls.py` 加入新path
+```
+path('data/last',  views.data_last),
+```
+
+- 並在 `water_signal/views.py` 加入新的function
+```
+
+...
+
+from django.http import JsonResponse
+
+...
+
+def data_last(request):
+    is_ng = False #True
+
+    if is_ng:
+        result = {'result':'NG', 'log':'no data in db'}
+        return JsonResponse(result)
+    else:
+        data_dict = {
+            "time": "2021-04-06 10:27:38",
+            "water_level_1": 0,
+            "water_level_2": 0
+        }
+        result = {'result':'OK', 'data':data_dict}
+        return JsonResponse(result)
+```
+
+- 這樣就可以在網址 `http://localhost:8000/water_signal/data/last` 下取得json資料
 
