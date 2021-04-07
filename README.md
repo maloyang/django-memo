@@ -444,3 +444,6 @@ admin.site.register(Water_data)
 ```
 - 產生的畫面如下:
 ![img](img/django_admin.png)
+
+- Django預設會在資料表名稱後面加上s
+
