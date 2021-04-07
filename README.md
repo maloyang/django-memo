@@ -427,3 +427,20 @@ def data_t1t2_4chart(request):
 - 當然，處理資料的function完成了，下一步就是要在`water_signal/urls.py`中登記，加入:
   - `path('data/t1t2/4chart',  views.data_t1t2_4chart),`
 
+----
+
+## 資料管理介面: 這是我超喜愛的Django功能
+
+- 只需要在所需要的App下的 admin.py註冊就可以
+- 以我的為例是: `water_signal/admin.py`，內容如下
+
+```
+from django.contrib import admin
+from water_signal.models import Water_data
+
+# Register your models here.
+
+admin.site.register(Water_data)
+```
+- 產生的畫面如下:
+![img](img/django_admin.png)
