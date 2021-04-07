@@ -447,7 +447,7 @@ admin.site.register(Water_data)
 
 - Django預設會在資料表名稱後面加上s
 
-### 進一步，更多的管理細部調整
+### 進一步，更多的管理細部調整 (p8-19)
 
 - 新增一個class來指定要顯示那些參數，我們修改`water_data/admin.py`如下:
 
