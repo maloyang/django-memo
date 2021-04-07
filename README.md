@@ -469,3 +469,36 @@ admin.site.register(Water_data, Water_data_Admin)
 
 ![img](img/django_admin2.png)
 
+- 其他調整
+  - 欄位可以直接編輯: `list_editable = ['water_level2']`
+  - 可以搜尋: `search_fields = ['data_time']`
+
+
+
+### 時間格式問題
+[ref](https://blog.mounirmesselmeni.de/2014/11/06/date-format-in-django-admin/)
+
+- 目前的時間格式看起來不太習慣，我都是習慣用 YYYY-MM-DD hh:mm:ss
+- `water/settings.py` 加入設定如下:
+- 這個設定是在設定en語系的，所以如果在 TIME_ZONE = 'Asia/Taipei' 時，就不會發生影響
+- 另外，這邊的設定是影響全域的，就不需要每個models.py逐一去改
+```
+...
+
+from django.conf.locale.en import formats as en_formats
+
+...
+
+#TIME_ZONE = 'Asia/Taipei'
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = True
+
+en_formats.DATETIME_FORMAT = 'Y-m-d H:i:s'
+en_formats.DATE_FORMAT = 'Y-m-d'
+en_formats.TIME_FORMAT = 'H:i:s'
+```
