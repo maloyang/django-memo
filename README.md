@@ -502,3 +502,27 @@ en_formats.DATETIME_FORMAT = 'Y-m-d H:i:s'
 en_formats.DATE_FORMAT = 'Y-m-d'
 en_formats.TIME_FORMAT = 'H:i:s'
 ```
+
+----
+
+### 前後端分離的作法 (我目前想到較方便的方式)
+
+- 搞了一整天 static 都無法被存取到，又因為我根本就沒有再使用樣板，好像就不需要特別再搞樣板路徑....
+- 目前，是將全部的html, css, js都放到static資料夾下，這樣再html檔中使用相對路徑就都沒有問題了
+- 然後，再把原來的html中取用的 web api 因為移到django而路徑有變化的部分改正確
+- 目前的想法是因為所有API我都已經在後端有設存取權限，所以這樣就算安全?!
+- 全部放在 `water_signal\static\water_signal` 資料夾中
+- 然後以 `http://127.0.0.1:8080/static/water_signal/watergate_overview.html` 去看網頁 (缺點是 static 會在 url 中)
+- 結構會是這樣
+```
+./water_signal
+  |
+  |-- assets
+  |-- css
+  |-- img
+  |-- js
+  |-- vendor
+  |-- index.html
+  |-- watergate_overview.html
+  ....
+```
