@@ -526,3 +526,39 @@ en_formats.TIME_FORMAT = 'H:i:s'
   |-- watergate_overview.html
   ....
 ```
+
+----
+
+### 繼續實作login的功能 (和原來admin的登入頁分開)
+
+說明一下這邊碰到的要點
+
+- 確認是GET, POST: `request.method == 'POST'` 可以區分
+- 取得form中的欄位
+  - `username = request.POST.get('username')` --> 由測試結果來看，django中的parameter (如:url/api?para1=aaa&para2=bbb)好像就等於form的欄位，因為在GET, POST的這兩個取得方式都一樣 (記得flask這邊好像是分開的)
+
+- 用`user = authenticate(username=username, password=password)` 來取得登入的user資訊，失敗的話，會取得None，所以用  `if not user` 就可以判斷是否ok
+- 在用 `auth_login(request, user)` 進行登入的細項處理，如session要紀錄，並填入要送給前端的欄位之類的
+- 做到這邊就可以 return 結果了
+- 另外，因為django會對 POST 動作進行 csrf 的確認，所以需要對單一API先取消csrf的檢查，用 `@csrf_exempt` 裝飾子即可 (書上都是教用template的方式讓後端嵌入csrf資料，但這樣會前後端無法完全分離，不是我想要的!)
+
+```
+@csrf_exempt
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        if not username or not password:
+            result = {'result':'NG', 'log':'username or password loss'}
+            return JsonResponse(result)
+        
+        user = authenticate(username=username, password=password)
+        if not user: #auth. fails
+            result = {'result':'NG', 'log':'authentication fails'}
+            return JsonResponse(result)
+        
+        auth_login(request, user)
+        result = {'result':'OK'}
+        return JsonResponse(result)
+```
+
